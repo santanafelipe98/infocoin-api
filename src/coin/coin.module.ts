@@ -22,6 +22,10 @@ import { CoinService } from './services/coin.service';
     providers: [
         CoinGeckoService,
         CoinService
+    ],
+    exports: [
+        CoinService,
+        CoinGeckoService
     ]
 })
 export class CoinModule {}

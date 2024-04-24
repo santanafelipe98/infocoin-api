@@ -5,6 +5,7 @@ import { CoinModule } from './coin/coin.module';
 import { ConfigModule } from '@nestjs/config';
 import { CommonModule } from './common/common.module';
 import { DatabaseModule } from './database/database.module';
+import { SyncModule } from './sync/sync.module';
 import typeorm from './database/config/typeorm';
 
 @Module({
@@ -15,7 +16,8 @@ import typeorm from './database/config/typeorm';
             load: [ typeorm ]
         }),
         CommonModule,
-        DatabaseModule
+        DatabaseModule,
+        SyncModule
     ],
     controllers: [AppController],
     providers: [AppService],
