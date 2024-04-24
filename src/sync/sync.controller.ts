@@ -9,7 +9,7 @@ export class SyncController {
 
     @Post('start')
     @HttpCode(204)
-    async startSynchronization() {
-        return this.syncService.startSynchronization();
+    async startSync() {
+        return this.syncService.startSync();
     }
 }
