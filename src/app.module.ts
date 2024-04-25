@@ -8,6 +8,7 @@ import { DatabaseModule } from './database/database.module';
 import { SyncModule } from './sync/sync.module';
 import { AlertModule } from './alert/alert.module';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 import typeorm from './database/config/typeorm';
 
 @Module({
@@ -21,7 +22,8 @@ import typeorm from './database/config/typeorm';
         DatabaseModule,
         SyncModule,
         AlertModule,
-        UserModule
+        UserModule,
+        AuthModule
     ],
     controllers: [AppController],
     providers: [AppService],
