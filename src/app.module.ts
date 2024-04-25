@@ -6,6 +6,8 @@ import { ConfigModule } from '@nestjs/config';
 import { CommonModule } from './common/common.module';
 import { DatabaseModule } from './database/database.module';
 import { SyncModule } from './sync/sync.module';
+import { AlertModule } from './alert/alert.module';
+import { UserModule } from './user/user.module';
 import typeorm from './database/config/typeorm';
 
 @Module({
@@ -17,7 +19,9 @@ import typeorm from './database/config/typeorm';
         }),
         CommonModule,
         DatabaseModule,
-        SyncModule
+        SyncModule,
+        AlertModule,
+        UserModule
     ],
     controllers: [AppController],
     providers: [AppService],
