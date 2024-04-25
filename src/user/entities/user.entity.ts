@@ -4,6 +4,7 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    Generated,
     OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn
@@ -33,6 +34,15 @@ export class User {
 
     @Column()
     email: string;
+
+    @Column({
+        name: "password_id",
+        type: "uuid",
+        generated: true
+    })
+    @Generated("uuid")
+    @Exclude({ toPlainOnly: true })
+    passwordId: string;
     
     @Column({ name: "password_hash" })
     @Exclude({ toPlainOnly: true })
