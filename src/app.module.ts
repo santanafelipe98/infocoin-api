@@ -9,6 +9,8 @@ import { SyncModule } from './sync/sync.module';
 import { AlertModule } from './alert/alert.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { MailerModule } from './mailer/mailer.module';
+import { QueueModule } from './queue/queue.module';
 import typeorm from './database/config/typeorm';
 
 @Module({
@@ -18,12 +20,15 @@ import typeorm from './database/config/typeorm';
             isGlobal: true,
             load: [ typeorm ]
         }),
+        MailerModule,
         CommonModule,
         DatabaseModule,
         SyncModule,
         AlertModule,
         UserModule,
-        AuthModule
+        AuthModule,
+        MailerModule,
+        QueueModule
     ],
     controllers: [AppController],
     providers: [AppService],

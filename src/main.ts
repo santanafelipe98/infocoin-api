@@ -3,8 +3,11 @@ import { AppModule } from './app.module';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ENV_PORT } from './common/constants';
+import { initializeTransactionalContext } from 'typeorm-transactional';
 
 async function bootstrap() {
+    initializeTransactionalContext();
+
     const app = await NestFactory.create(AppModule);
     app.useGlobalPipes(new ValidationPipe({
         forbidNonWhitelisted: true,

@@ -23,10 +23,7 @@ export class AuthController {
     }
 
     @Post('sign-up')
-    async signUp(@Body() dto: CreateUserDto, @Res() resp: Response) {
-        const user = await this.authService.signUp(dto);
-
-        return resp.location(`/users/${user.id}`)
-            .sendStatus(HttpStatusCode.NoContent);
+    async signUp(@Body() dto: CreateUserDto) {
+        return this.authService.signUp(dto);
     }
 }

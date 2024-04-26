@@ -6,6 +6,9 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { JwtConfigProvider } from './config/jwt-config.provider';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { VerificationToken } from './entities/verification-token.entity';
+import { MailerModule } from '../mailer/mailer.module';
 
 @Module({
   imports: [
@@ -14,7 +17,11 @@ import { JwtConfigProvider } from './config/jwt-config.provider';
       inject: [ ConfigService ],
       useClass: JwtConfigProvider
     }),
-    PassportModule
+    TypeOrmModule.forFeature([
+      VerificationToken
+    ]),
+    PassportModule,
+    MailerModule
   ],
   providers: [AuthService],
   controllers: [AuthController]

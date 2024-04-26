@@ -9,6 +9,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from "typeorm";
+import { VerificationToken } from "../../auth/entities/verification-token.entity";
 
 export class Name {
     @Column({ name: "first_name" })
@@ -53,4 +54,7 @@ export class User {
 
     @OneToMany(() => Alert, (alert: Alert) => alert.user)
     alerts: Alert[];
+
+    @OneToMany(() => VerificationToken, (token: VerificationToken) => token.user)
+    verificationTokens: VerificationToken[];
 }
