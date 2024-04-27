@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Post, Query } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, Param, Post, Query } from "@nestjs/common";
 import { AuthService } from "../services/auth.service";
 import { CreateUserDto } from "../../user/dto/create-user.dto";
 import { HttpStatusCode } from "axios";
@@ -6,6 +6,8 @@ import { SignInDto } from "../dto/sign-in.dto";
 import { AccessTokenDto } from "../dto/access-token.dto";
 import { VerifyAccountDto } from "../dto/verify-account.dto";
 import { SendPasswordResetCodeDto } from "../dto/send-password-reset-code.dto";
+import { PasswordResetCodeStatusDto } from "../dto/password-reset-code-status.dto";
+import { CheckPasswordResetCodeStatusDto } from "../dto/check-password-reset-code.dto";
 
 @Controller("auth")
 export class AuthController {
@@ -39,5 +41,11 @@ export class AuthController {
     @Post('send/password-reset-code')
     async sendPasswordResetCode(@Body() { userEmail }: SendPasswordResetCodeDto) {
         return this.authService.sendPasswordResetCode(userEmail);
+    }
+
+    @Get('status/password-reset-code/:code')
+    async checkPasswordResetCodeStatus(@Param() { code }: CheckPasswordResetCodeStatusDto)
+        : Promise<PasswordResetCodeStatusDto> {
+        return this.authService.checkPasswordResetCodeStatus(code);
     }
 }

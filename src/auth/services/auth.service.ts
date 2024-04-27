@@ -23,6 +23,7 @@ import {
 } from '../../common/constants';
 import { TokenExpiredException } from '../exceptions/token-expired.exception';
 import { PasswordResetToken } from '../entities/password-reset-token.entity';
+import { PasswordResetCodeStatusDto } from '../dto/password-reset-code-status.dto';
 
 @Injectable()
 export class AuthService {
@@ -139,6 +140,41 @@ export class AuthService {
         });
 
         return this.passwordResetTokenRepository.save(passwordResetToken);
+    }
+
+    async getPasswordResetTokenByToken(token: string): Promise<PasswordResetToken> {
+        const passwordRecoveryToken = await this.passwordResetTokenRepository
+            .findOne({
+                where: {
+                    token
+                },
+                order: {
+                    createdAt: 'DESC'
+                }
+            });
+
+        if (!passwordRecoveryToken)
+            throw new TokenExpiredException("Token has expired!");
+
+        return passwordRecoveryToken;
+    }
+
+    async checkPasswordResetCodeStatus(code: string): Promise<PasswordResetCodeStatusDto> {
+        try {
+            const passwordRecoveryToken = await this.getPasswordResetTokenByToken(code);
+
+            const timestampComparison = Math.sign(passwordRecoveryToken.expiresAt.getTime() - Date.now());
+
+            if (timestampComparison < 0)
+                throw new TokenExpiredException('Token has expired');
+
+            return { valid: true };
+        } catch (Exception) {
+            if (Exception instanceof TokenExpiredException)
+                return { valid: false };
+
+            throw Exception;
+        }
     }
 
     async sendPasswordResetCode(userEmail: string) {
