@@ -1,10 +1,10 @@
-import { Body, Controller, HttpCode, Post, Res } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, Post, Query } from "@nestjs/common";
 import { AuthService } from "../services/auth.service";
 import { CreateUserDto } from "../../user/dto/create-user.dto";
-import { Response } from "express";
 import { HttpStatusCode } from "axios";
 import { SignInDto } from "../dto/sign-in.dto";
 import { AccessTokenDto } from "../dto/access-token.dto";
+import { VerifyAccountDto } from "../dto/verify-account.dto";
 
 @Controller("auth")
 export class AuthController {
@@ -25,5 +25,12 @@ export class AuthController {
     @Post('sign-up')
     async signUp(@Body() dto: CreateUserDto) {
         return this.authService.signUp(dto);
+    }
+
+    @Get('verify-account')
+    async verifyAccount(@Query() { token }: VerifyAccountDto) {
+        await this.authService.verifyAccount(token);
+
+        return 'Your account has been successfully verified.'
     }
 }

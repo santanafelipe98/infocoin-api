@@ -20,6 +20,7 @@ import {
     ENV_MAILGUN_TEMPLATE_EMAIL_VERIFICATION, 
     PATH_ACCOUNT_VERIFICATION
 } from '../../common/constants';
+import { TokenExpiredException } from '../exceptions/token-expired.exception';
 
 @Injectable()
 export class AuthService {
@@ -97,5 +98,25 @@ export class AuthService {
 
         return this.verificationTokenRepository
             .save(verificationToken);
+    }
+
+    @Transactional()
+    async verifyAccount(token: string) {
+        const verificationToken = await this.verificationTokenRepository.findOne({
+            where: {
+                token
+            }
+        });
+
+        if (!verificationToken)
+            throw new TokenExpiredException("Token has expired!");
+
+        const timestampComparison = Math.sign(verificationToken.expiresAt.getTime() - Date.now());
+
+        if (timestampComparison < 0)
+            throw new TokenExpiredException("Token has expired!");
+
+        await this.verificationTokenRepository.remove(verificationToken);
+        await this.userService.verifyUser(verificationToken.userId);
     }
 }

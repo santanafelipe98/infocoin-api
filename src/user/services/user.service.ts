@@ -48,6 +48,17 @@ export class UserService {
         });
     }
 
+    async verifyUser(userId: string) {
+        const now = new Date();
+
+        const user = await this.getUserById(userId);
+
+        await this.userRepository.save({
+            ...user,
+            verifiedAt: now
+        });
+    }
+
     async createUser(dto: CreateUserDto): Promise<User> {
         const userExists = await this.userExists(dto.email);
 
