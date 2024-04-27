@@ -16,4 +16,8 @@ export class ConditionTypeService {
 
         return this.conditionTypeRepository.save(conditionType);
     }
+
+    async getConditionTypesList(): Promise<ConditionType[]> {
+        return this.conditionTypeRepository.find();
+    }
 }
