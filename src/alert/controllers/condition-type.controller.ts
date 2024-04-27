@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
 import { ConditionTypeService } from "../services/condition-type.service";
 import { CreateConditionTypeDto } from "../dto/create-condition-type.dto";
 import { ConditionType } from "../entities/condition-type.entity";
@@ -31,5 +31,10 @@ export class ConditionTypeController {
     @Get("list")
     async getConditionTypesList(): Promise<ConditionType[]> {
         return this.conditionTypeService.getConditionTypesList();
+    }
+
+    @Delete('delete/:id')
+    async removeConditionType(@Param() { id }: ReadConditionTypeDto) {
+        return this.conditionTypeService.removeConditionType(id);
     }
 }

@@ -44,4 +44,10 @@ export class ConditionTypeService {
     async getConditionTypesList(): Promise<ConditionType[]> {
         return this.conditionTypeRepository.find();
     }
+
+    async removeConditionType(id: number) {
+        const conditionType = await this.getConditionTypeById(id);
+
+        await this.conditionTypeRepository.remove(conditionType);
+    }
 }
