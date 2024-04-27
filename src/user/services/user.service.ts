@@ -6,6 +6,9 @@ import { CreateUserDto } from "../dto/create-user.dto";
 import { UserNotFoundException } from "../exceptions/user-not-found.exception";
 import { UserAlreadyExistsException } from "../exceptions/user-already-exists.exception";
 import * as bcrypt from 'bcrypt';
+import { v4 as uuidv4 } from 'uuid'; 
+import { ChangePasswordDto } from "../dto/change-password.dto";
+import { PasswordChangeException } from "../exceptions/password-change.exception";
 
 @Injectable()
 export class UserService {
@@ -74,6 +77,26 @@ export class UserService {
         });
 
         return this.userRepository.save(user);
+    }
+
+    async changePassword(dto: ChangePasswordDto) {
+        const user = await this.getUserById(dto.userId);
+        const passwordHash = await this.hashPassword(dto.password);
+        const passwordId = uuidv4();
+
+        // Check if the new password is the same as old one
+
+        const isOldPassword = await this.comparePassword(
+            dto.password, user.passwordHash);
+
+        if (isOldPassword)
+            throw new PasswordChangeException("Your new password cannot be the same as your old password.");
+
+        await this.userRepository.save({
+            ...user,
+            passwordHash,
+            passwordId
+        });
     }
 
     async hashPassword(passwod: string): Promise<string> {

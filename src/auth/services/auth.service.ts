@@ -24,6 +24,7 @@ import {
 import { TokenExpiredException } from '../exceptions/token-expired.exception';
 import { PasswordResetToken } from '../entities/password-reset-token.entity';
 import { PasswordResetCodeStatusDto } from '../dto/password-reset-code-status.dto';
+import { ResetPasswordDto } from '../dto/reset-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -193,6 +194,24 @@ export class AuthService {
                 template,
                 "t:variables": JSON.stringify({ password_reset_code: passwordResetToken.token })
             }
+        });
+    }
+
+    @Transactional()
+    async resetPassword(dto: ResetPasswordDto) {
+        const passwordResetToken = await this.getPasswordResetTokenByToken(dto.code);
+        const user = await this.userService.getUserById(passwordResetToken.userId);
+
+        const { valid } = await this.checkPasswordResetCodeStatus(dto.code);
+
+        if (!valid)
+            throw new TokenExpiredException("Token has expired!");
+
+        await this.passwordResetTokenRepository.remove(passwordResetToken);
+        await this.userService.changePassword({
+            userId: user.id,
+            password: dto.password,
+            confirmPassword: dto.confirmPassword
         });
     }
 

@@ -8,6 +8,7 @@ import { VerifyAccountDto } from "../dto/verify-account.dto";
 import { SendPasswordResetCodeDto } from "../dto/send-password-reset-code.dto";
 import { PasswordResetCodeStatusDto } from "../dto/password-reset-code-status.dto";
 import { CheckPasswordResetCodeStatusDto } from "../dto/check-password-reset-code.dto";
+import { ResetPasswordDto } from "../dto/reset-password.dto";
 
 @Controller("auth")
 export class AuthController {
@@ -47,5 +48,11 @@ export class AuthController {
     async checkPasswordResetCodeStatus(@Param() { code }: CheckPasswordResetCodeStatusDto)
         : Promise<PasswordResetCodeStatusDto> {
         return this.authService.checkPasswordResetCodeStatus(code);
+    }
+
+    @HttpCode(HttpStatusCode.Ok)
+    @Post("reset-password")
+    async resetPassword(@Body() dto: ResetPasswordDto) {
+        return this.authService.resetPassword(dto);
     }
 }
