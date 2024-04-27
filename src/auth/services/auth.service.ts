@@ -18,9 +18,11 @@ import {
     ENV_BASE_URL,
     ENV_MAILGUN_DOMAIN_NAME,
     ENV_MAILGUN_TEMPLATE_EMAIL_VERIFICATION, 
+    ENV_MAILGUN_TEMPLATE_PASSWORD_RESET, 
     PATH_ACCOUNT_VERIFICATION
 } from '../../common/constants';
 import { TokenExpiredException } from '../exceptions/token-expired.exception';
+import { PasswordResetToken } from '../entities/password-reset-token.entity';
 
 @Injectable()
 export class AuthService {
@@ -30,7 +32,9 @@ export class AuthService {
         private readonly mailerService: MailerService,
         private readonly configService: ConfigService,
         @InjectRepository(VerificationToken)
-        private readonly verificationTokenRepository: Repository<VerificationToken>
+        private readonly verificationTokenRepository: Repository<VerificationToken>,
+        @InjectRepository(PasswordResetToken)
+        private readonly passwordResetTokenRepository: Repository<PasswordResetToken>
     ) {}
 
     @Transactional()
@@ -118,5 +122,52 @@ export class AuthService {
 
         await this.verificationTokenRepository.remove(verificationToken);
         await this.userService.verifyUser(verificationToken.userId);
+    }
+
+    async createPasswordResetToken(userId: string): Promise<PasswordResetToken> {
+        const expiresAt = new Date();
+        expiresAt.setHours(expiresAt.getHours() + 3);
+
+        const user = await this.userService.getUserById(userId);
+
+        const token = this.generateTokenCode(6);
+
+        const passwordResetToken = this.passwordResetTokenRepository.create({
+            token,
+            expiresAt,
+            user
+        });
+
+        return this.passwordResetTokenRepository.save(passwordResetToken);
+    }
+
+    async sendPasswordResetCode(userEmail: string) {
+        const user = await this.userService.getUserByEmail(userEmail);
+        const passwordResetToken = await this.createPasswordResetToken(user.id);
+
+        const domain = this.configService.get<string>(ENV_MAILGUN_DOMAIN_NAME);
+        const template = this.configService.get<string>(ENV_MAILGUN_TEMPLATE_PASSWORD_RESET)
+
+        await this.mailerService.sendMail({
+            domain,
+            options: {
+                from: EMAIL_FROM,
+                to: userEmail,
+                subject: "Password Reset - InfoCoin",
+                template,
+                "t:variables": JSON.stringify({ password_reset_code: passwordResetToken.token })
+            }
+        });
+    }
+
+    generateTokenCode(length: number): string {
+        let code = '';
+
+        for (let i = 0; i < length; i++) {
+            let randomNumber = Math.floor(Math.random() * 9);
+            code += randomNumber;
+        }
+
+        return code;
     }
 }

@@ -5,6 +5,7 @@ import { HttpStatusCode } from "axios";
 import { SignInDto } from "../dto/sign-in.dto";
 import { AccessTokenDto } from "../dto/access-token.dto";
 import { VerifyAccountDto } from "../dto/verify-account.dto";
+import { SendPasswordResetCodeDto } from "../dto/send-password-reset-code.dto";
 
 @Controller("auth")
 export class AuthController {
@@ -32,5 +33,11 @@ export class AuthController {
         await this.authService.verifyAccount(token);
 
         return 'Your account has been successfully verified.'
+    }
+
+    @HttpCode(HttpStatusCode.Ok)
+    @Post('send/password-reset-code')
+    async sendPasswordResetCode(@Body() { userEmail }: SendPasswordResetCodeDto) {
+        return this.authService.sendPasswordResetCode(userEmail);
     }
 }

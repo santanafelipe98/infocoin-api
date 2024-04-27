@@ -10,6 +10,7 @@ import {
     UpdateDateColumn
 } from "typeorm";
 import { VerificationToken } from "../../auth/entities/verification-token.entity";
+import { PasswordResetToken } from "src/auth/entities/password-reset-token.entity";
 
 export class Name {
     @Column({ name: "first_name" })
@@ -57,4 +58,7 @@ export class User {
 
     @OneToMany(() => VerificationToken, (token: VerificationToken) => token.user)
     verificationTokens: VerificationToken[];
+
+    @OneToMany(() => PasswordResetToken, (token: PasswordResetToken) => token.user)
+    passwordResetTokens: PasswordResetToken[];
 }

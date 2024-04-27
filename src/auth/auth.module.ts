@@ -9,6 +9,7 @@ import { JwtConfigProvider } from './config/jwt-config.provider';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { VerificationToken } from './entities/verification-token.entity';
 import { MailerModule } from '../mailer/mailer.module';
+import { PasswordResetToken } from './entities/password-reset-token.entity';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { MailerModule } from '../mailer/mailer.module';
       useClass: JwtConfigProvider
     }),
     TypeOrmModule.forFeature([
-      VerificationToken
+      VerificationToken,
+      PasswordResetToken
     ]),
     PassportModule,
     MailerModule
