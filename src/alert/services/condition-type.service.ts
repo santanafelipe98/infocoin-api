@@ -4,6 +4,7 @@ import { ConditionType } from "../entities/condition-type.entity";
 import { Repository } from "typeorm";
 import { CreateConditionTypeDto } from "../dto/create-condition-type.dto";
 import { ConditionTypeNotFoundException } from "../exceptions/condition-type-not-found.exception";
+import { UpdateConditionTypeDto } from "../dto/update-condition-type.dto";
 
 @Injectable()
 export class ConditionTypeService {
@@ -16,6 +17,15 @@ export class ConditionTypeService {
         const conditionType = this.conditionTypeRepository.create(dto);
 
         return this.conditionTypeRepository.save(conditionType);
+    }
+
+    async updateConditionType(id: number, dto: UpdateConditionTypeDto): Promise<ConditionType> {
+        const conditionType = await this.getConditionTypeById(id);
+
+        return this.conditionTypeRepository.save({
+            ...conditionType,
+            ...dto
+        });
     }
 
     async getConditionTypeById(id: number): Promise<ConditionType> {
