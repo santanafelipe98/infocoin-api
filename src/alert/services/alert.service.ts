@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Repository } from "typeorm";
+import { FindOptionsWhere, Repository } from "typeorm";
 import { Alert } from "../entities/alert.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CreateAlertDto } from "../dto/create-alert.dto";
@@ -7,6 +7,7 @@ import { UserService } from "../../user/services/user.service";
 import { CoinService } from "../../coin/services/coin.service";
 import { AlertNotFoundException } from "../exceptions/alert-not-found.exception";
 import { ConditionTypeService } from "./condition-type.service";
+import { ReadAlertsListDto } from "../dto/read-alerts-list.dto";
 
 @Injectable()
 export class AlertService {
@@ -22,6 +23,13 @@ export class AlertService {
         const alert = await this.alertRepository.findOne({
             where: {
                 id: alertId
+            },
+            select: {
+                id: true,
+                createdAt: true,
+                updatedAt: true,
+                isActive: true,
+                triggeredAt: true,
             },
             relations: {
                 coin: true,
@@ -55,5 +63,35 @@ export class AlertService {
         await this.alertRepository.save(alert, { reload: true });
 
         return this.getAlertById(alert.id);
+    }
+
+    async getAlertsList(dto: ReadAlertsListDto): Promise<Alert[]> {
+        let where: FindOptionsWhere<Alert> = {};
+
+        if (dto.userId)
+            where['user.id'] = dto.userId;
+
+        if (dto.coinId)
+            where['coin.id'] = dto.coinId;
+
+        if (dto.isActive)
+            where['isActive'] = dto.isActive;
+
+        return this.alertRepository.find({
+            where,
+            select: {
+                id: true,
+                createdAt: true,
+                updatedAt: true,
+                isActive: true,
+                triggeredAt: true
+            },
+            relations: {
+                coin: true,
+                condition: {
+                    type: true
+                }
+            }
+        });
     }
 }

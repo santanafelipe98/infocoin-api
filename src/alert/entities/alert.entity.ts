@@ -8,7 +8,8 @@ import {
     OneToOne,
     PrimaryGeneratedColumn,
     RelationId,
-    UpdateDateColumn
+    UpdateDateColumn,
+    VirtualColumn
 } from "typeorm";
 import { Condition } from "./condition.entity";
 import { Coin } from "src/coin/entities/coin.entity";
@@ -26,6 +27,11 @@ export class Alert {
 
     @Column({ type: "timestamp", nullable: true, name: "triggered_at" })
     triggeredAt: Date;
+
+    @VirtualColumn({
+        query: (alias) => `SELECT (CASE WHEN ${alias}.triggered_at IS NULL THEN true ELSE false END)`
+    })
+    isActive: boolean;
 
     @RelationId((alert: Alert) => alert.user)
     userId: string;
