@@ -5,6 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConditionType } from './entities/condition-type.entity';
 import { Condition } from './entities/condition.entity';
 import { Alert } from './entities/alert.entity';
+import { AlertService } from './services/alert.service';
+import { AlertController } from './controllers/alert.controller';
+import { UserModule } from '../user/user.module';
+import { CoinModule } from '../coin/coin.module';
 
 @Module({
     imports: [
@@ -12,12 +16,16 @@ import { Alert } from './entities/alert.entity';
             Alert,
             ConditionType,
             Condition
-        ])
+        ]),
+        CoinModule,
+        UserModule
     ],
     providers: [
+        AlertService,
         ConditionTypeService
     ],
     controllers: [
+        AlertController,
         ConditionTypeController
     ]
 })

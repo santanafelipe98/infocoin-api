@@ -11,6 +11,7 @@ import {
     UpdateDateColumn
 } from "typeorm";
 import { Condition } from "./condition.entity";
+import { Coin } from "src/coin/entities/coin.entity";
 
 @Entity("alerts")
 export class Alert {
@@ -35,12 +36,13 @@ export class Alert {
     @ManyToOne(() => User, (user: User) => user.alerts)
     user: User;
 
-    @RelationId((alert: Alert) => alert.whereCondition)
-    whereConditionId: number;
+    @RelationId((alert: Alert) => alert.coin)
+    coinId: string;
 
-    @JoinColumn({
-        name: "where_condition"
-    })
-    @OneToOne(() => Condition, (condition: Condition) => condition.alert)
-    whereCondition: Condition;
+    @JoinColumn({ name: "coin_id" })
+    @ManyToOne(() => Coin, (coin: Coin) => coin.alerts)
+    coin: Coin;
+
+    @OneToOne(() => Condition, (condition: Condition) => condition.alert, { cascade: true })
+    condition: Condition;
 }

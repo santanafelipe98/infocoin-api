@@ -15,6 +15,6 @@ export class ConditionType {
     @UpdateDateColumn({ name: "updated_at" })
     updatedAt: Date;
 
-    @OneToMany(() => Condition, (condition: Condition) => condition.conditionType)
+    @OneToMany(() => Condition, (condition: Condition) => condition.type)
     conditions: Condition[];
 }

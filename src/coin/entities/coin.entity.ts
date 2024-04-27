@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Alert } from "src/alert/entities/alert.entity";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
 
 @Entity("coins")
 export class Coin {
@@ -16,4 +17,7 @@ export class Coin {
 
     @UpdateDateColumn({ name: "updated_at" })
     updatedAt: Date;
+
+    @OneToMany(() => Alert, (alert: Alert) => alert.coin)
+    alerts: Alert[];
 }

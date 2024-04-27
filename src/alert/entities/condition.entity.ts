@@ -16,16 +16,23 @@ export class Condition {
     @Column()
     value: string;
 
-    @RelationId((condition: Condition) => condition.conditionType, "condition_type_id")
-    conditionTypeId: number;
+    @RelationId((condition: Condition) => condition.type)
+    typeId: number;
 
     @JoinColumn({
-        name: "condition_type_id",
-        referencedColumnName: "id"
+        name: "condition_type_id"
     })
     @ManyToOne(() => ConditionType, (conditionType: ConditionType) => conditionType.conditions)
-    conditionType: Condition;
+    type: ConditionType;
 
-    @OneToOne(() => Alert, (alert: Alert) => alert.whereCondition)
+    @RelationId((condition: Condition) => condition.alert)
+    alertId: number;
+
+    @JoinColumn({
+        name: "alert_id"
+    })
+    @OneToOne(() => Alert, (alert: Alert) => alert.condition, {
+        onDelete: 'CASCADE'
+    })
     alert: Alert;
 }
