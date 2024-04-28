@@ -20,10 +20,14 @@ export class SyncService {
 
     @Cron(CronExpression.EVERY_DAY_AT_3AM)
     async autoSync() {
-        this.logger.debug("Start to sync");
+        try {
+            this.logger.debug("Starting to sync");
 
-        await this.startSync();
+            await this.startSync();
 
-        this.logger.debug("Sync completed")
+            this.logger.debug("Sync completed")
+        } catch (Exception) {
+            this.logger.error(Exception);
+        }
     }
 }
