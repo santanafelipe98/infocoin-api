@@ -83,6 +83,12 @@ export class AlertService {
         });
     }
 
+    async removeAlert(alertId: number) {
+        const alert = await this.getAlertById(alertId);
+
+        await this.alertRepository.remove(alert);
+    }
+
     async getAlertsList(dto: ReadAlertsListDto): Promise<Alert[]> {
         let where: FindOptionsWhere<Alert> = {};
 
