@@ -8,6 +8,7 @@ import { CoinService } from "../../coin/services/coin.service";
 import { AlertNotFoundException } from "../exceptions/alert-not-found.exception";
 import { ConditionTypeService } from "./condition-type.service";
 import { ReadAlertsListDto } from "../dto/read-alerts-list.dto";
+import { UpdateAlertDto } from "../dto/update-alert.dto";
 
 @Injectable()
 export class AlertService {
@@ -63,6 +64,23 @@ export class AlertService {
         await this.alertRepository.save(alert, { reload: true });
 
         return this.getAlertById(alert.id);
+    }
+
+    async updateAlert(alertId: number, dto: UpdateAlertDto): Promise<Alert> {
+        const oldAlert = await this.getAlertById(alertId);
+        let type = oldAlert.condition.type;
+
+        if (dto.condition.typeId !== oldAlert.condition.type.id)
+            type = await this.conditionTypeService.getConditionTypeById(dto.condition.typeId);
+
+        return this.alertRepository.save({
+            ...oldAlert,
+            condition: {
+                ...oldAlert.condition,
+                ...dto.condition,
+                type
+            }
+        });
     }
 
     async getAlertsList(dto: ReadAlertsListDto): Promise<Alert[]> {
