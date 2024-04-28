@@ -31,4 +31,9 @@ export class AlertController {
     async getAlertsList(@Query() dto: ReadAlertsListDto): Promise<Alert[]> {
         return this.alertService.getAlertsList(dto);
     }
+
+    @Get(':id')
+    async getAlertById(@Param() { id }: ReadAlertDto): Promise<Alert> {
+        return this.alertService.getAlertById(id);
+    }
 }
