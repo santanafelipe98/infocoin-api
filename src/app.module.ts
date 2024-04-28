@@ -11,6 +11,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { MailerModule } from './mailer/mailer.module';
 import { QueueModule } from './queue/queue.module';
+import { ScheduleModule } from '@nestjs/schedule';
 import typeorm from './database/config/typeorm';
 
 @Module({
@@ -21,6 +22,7 @@ import typeorm from './database/config/typeorm';
             load: [ typeorm ]
         }),
         MailerModule,
+        ScheduleModule.forRoot(),
         CommonModule,
         DatabaseModule,
         SyncModule,

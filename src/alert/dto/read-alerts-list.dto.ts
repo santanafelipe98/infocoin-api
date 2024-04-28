@@ -1,4 +1,5 @@
-import { IsBoolean, IsIn, IsNotEmpty, IsOptional } from "class-validator";
+import { Transform, Type } from "class-transformer";
+import { IsBoolean, IsNotEmpty, IsOptional } from "class-validator";
 
 export class ReadAlertsListDto {
     @IsNotEmpty()
@@ -9,7 +10,15 @@ export class ReadAlertsListDto {
     @IsOptional()
     coinId?: number;
 
-    @IsNotEmpty()
+    @IsBoolean()
     @IsOptional()
+    @Transform(({ obj, key }) => {
+       if (obj[key] === 'true' || obj[key] === '1')
+            return true;
+       else if (obj[key] === 'false' || obj[key] === '0')
+            return false;
+       else
+            return obj[key];
+    })
     isActive?: boolean;
 }

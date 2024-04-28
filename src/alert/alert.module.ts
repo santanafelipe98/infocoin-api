@@ -9,6 +9,10 @@ import { AlertService } from './services/alert.service';
 import { AlertController } from './controllers/alert.controller';
 import { UserModule } from '../user/user.module';
 import { CoinModule } from '../coin/coin.module';
+import { MailerModule } from '../mailer/mailer.module';
+import { AlertTriggeringProcessor } from './jobs/alert-triggering.processor';
+import { BullModule } from '@nestjs/bull';
+import { QUEUE_ALERT_TRIGGERING } from '../common/constants';
 
 @Module({
     imports: [
@@ -18,10 +22,15 @@ import { CoinModule } from '../coin/coin.module';
             Condition
         ]),
         CoinModule,
-        UserModule
+        UserModule,
+        MailerModule,
+        BullModule.registerQueue({
+            name: QUEUE_ALERT_TRIGGERING
+        })
     ],
     providers: [
         AlertService,
+        AlertTriggeringProcessor,
         ConditionTypeService
     ],
     controllers: [

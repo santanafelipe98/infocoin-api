@@ -20,5 +20,5 @@ export class CoinGeckoReadCoinPriceDto {
     include_last_updated_at?: boolean;
 
     @IsOptional()
-    precision?: string;
+    precision?: number;
 }

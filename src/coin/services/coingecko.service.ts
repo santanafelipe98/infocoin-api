@@ -29,6 +29,9 @@ export class CoinGeckoService {
 
     async getCoinPriceByIds(dto: CoinGeckoReadCoinPriceDto): Promise<CoinGeckoCoinPriceDto> {
         const endpointPath = '/simple/price';
+
+        console.log(dto);
+
         const { data } = await firstValueFrom(
             this.httpService.get<CoinGeckoCoinPriceDto>(endpointPath, {
                 params: dto

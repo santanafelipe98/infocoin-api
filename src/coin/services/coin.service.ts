@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Repository } from "typeorm";
+import { IsNull, Not, Repository } from "typeorm";
 import { Coin } from "../entities/coin.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UpdateCoinDto } from "../dto/update-coin.dto";
@@ -27,6 +27,15 @@ export class CoinService {
     async getCoinsList(): Promise<Coin[]> {
         return this.coinRepository
             .find();
+    }
+
+    async getCoinsListWithActiveAlerts(): Promise<Coin[]> {
+        const queryBuilder = this.coinRepository
+            .createQueryBuilder('coin')
+            .innerJoin('coin.alerts', 'alerts')
+            .where('alerts.triggered_at IS NULL');
+
+        return queryBuilder.getMany();
     }
 
     async updateCoinsList(coinsList: UpdateCoinDto[]): Promise<void> {
