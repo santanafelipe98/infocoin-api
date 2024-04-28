@@ -1,6 +1,6 @@
 export enum Operator {
-    GREATER_THAN_OR_EQUAL,
-    LESS_THAN_OR_EQUAL
+    GREATER_THAN_OR_EQUAL = 1,
+    LESS_THAN_OR_EQUAL = 2
 }
 
 export interface ILogicalOperation<T> {
