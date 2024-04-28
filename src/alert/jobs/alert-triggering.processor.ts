@@ -2,7 +2,7 @@ import { OnQueueCompleted, OnQueueFailed, Process, Processor } from "@nestjs/bul
 import {
     EMAIL_FROM,
     ENV_MAILGUN_DOMAIN_NAME,
-    ENV_MAILGUN_TEMPALTE_PRICE_ALERT,
+    ENV_MAILGUN_TEMPLATE_PRICE_ALERT,
     JOB_ALERT_TRIGGERING,
     PARAM_COINGECKO_DEFAULT_VS_CURRENCIES,
     QUEUE_ALERT_TRIGGERING
@@ -36,7 +36,7 @@ export class AlertTriggeringProcessor {
         const user = await this.userService.getUserById(alert.userId);
 
         const domain   = this.configService.get<string>(ENV_MAILGUN_DOMAIN_NAME);
-        const template = this.configService.get<string>(ENV_MAILGUN_TEMPALTE_PRICE_ALERT)
+        const template = this.configService.get<string>(ENV_MAILGUN_TEMPLATE_PRICE_ALERT)
 
         const now = new Date();
 
