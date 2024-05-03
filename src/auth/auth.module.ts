@@ -10,6 +10,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { VerificationToken } from './entities/verification-token.entity';
 import { MailerModule } from '../mailer/mailer.module';
 import { PasswordResetToken } from './entities/password-reset-token.entity';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
@@ -25,7 +26,10 @@ import { PasswordResetToken } from './entities/password-reset-token.entity';
     PassportModule,
     MailerModule
   ],
-  providers: [AuthService],
+  providers: [
+    AuthService,
+    JwtStrategy
+  ],
   controllers: [AuthController]
 })
 export class AuthModule {}
