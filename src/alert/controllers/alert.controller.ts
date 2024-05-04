@@ -1,11 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
 import { AlertService } from "../services/alert.service";
 import { Alert } from "../entities/alert.entity";
 import { CreateAlertDto } from "../dto/create-alert.dto";
 import { ReadAlertsListDto } from "../dto/read-alerts-list.dto";
 import { UpdateAlertDto } from "../dto/update-alert.dto";
 import { ReadAlertDto } from "../dto/read-alert.dto";
+import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";
 
+@UseGuards(JwtAuthGuard)
 @Controller("alerts")
 export class AlertController {
     constructor(
