@@ -1,10 +1,12 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { CoinGeckoService } from '../services/coingecko.service';
 import { CoinGeckoReadCoinPriceDto } from '../dto/coingecko-read-coin-price.dto';
 import { CoinGeckoCoinPriceDto } from '../dto/coingecko-coin-price.dto';
 import { Coin } from '../entities/coin.entity';
 import { CoinService } from '../services/coin.service';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('coins')
 export class CoinController {
     constructor(
