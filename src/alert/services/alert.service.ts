@@ -195,7 +195,7 @@ export class AlertService {
         return groupedBy;
     }
 
-    @Cron(CronExpression.EVERY_30_MINUTES)
+    @Cron(CronExpression.EVERY_10_MINUTES)
     async checkCoinsListPrices() {
         try {
             const coinsList = await this.coinService.getCoinsListWithActiveAlerts();
@@ -228,7 +228,7 @@ export class AlertService {
                 alertsList.forEach(alert => {
                     const targetPrice = parseFloat(alert.condition.value);
                     const shouldTrigger = logicalOperation<number>(alert.condition.type.id)
-                        .execute(targetPrice, coinPrice[PARAM_COINGECKO_DEFAULT_VS_CURRENCIES]);
+                        .execute(coinPrice[PARAM_COINGECKO_DEFAULT_VS_CURRENCIES], targetPrice);
 
                     if (shouldTrigger)
                         toTriggerAlertsList.push({ coinPrice, alert });
